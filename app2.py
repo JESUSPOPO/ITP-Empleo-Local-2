@@ -1,6 +1,6 @@
+import html
 import os
 import re
-import html
 from datetime import datetime
 
 import pandas as pd
@@ -55,9 +55,28 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-.stApp { background: #f4f7fb; }
-[data-testid="stSidebar"] { background: linear-gradient(180deg, #102542, #173b65); }
-[data-testid="stSidebar"] * { color: white !important; }
+.stApp { background: linear-gradient(180deg,#f5f8fc 0%,#eef3f9 100%); }
+.block-container { max-width: 1420px; padding-top: 1.5rem; padding-bottom: 2.5rem; }
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #102542, #173b65);
+    border-right: 1px solid rgba(255,255,255,.12);
+}
+[data-testid="stSidebar"] *:not([data-testid="stAlert"]):not([data-testid="stAlert"] *) {
+    color: white !important;
+}
+[data-testid="stSidebar"] .stRadio label { font-weight:600; }
+
+/* Alertas dentro del sidebar con contraste legible */
+[data-testid="stSidebar"] [data-testid="stAlert"] {
+    background-color: #e8f2ff !important;
+    border: 1px solid #bfdbfe !important;
+    border-radius: 10px;
+}
+[data-testid="stSidebar"] [data-testid="stAlert"] * {
+    color: #102542 !important;
+}
+
 .gov-strip { background:#f1f1f1; color:#303030; padding:9px 16px; border-radius:7px; font-size:13px; margin-bottom:14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
 .institution-header { background:white; border:1px solid #e4eaf2; border-radius:12px; padding:17px 22px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; }
 .brand-left { display:flex; align-items:center; gap:14px; }
@@ -69,34 +88,24 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .hero h1 { font-size:36px; font-weight:800; color:white; font-family:'Montserrat',sans-serif; margin-bottom:10px; }
 .hero p { font-size:16px; color:#e1edfa; margin-bottom:0; }
 .section-title { color:#102542; font-size:24px; font-weight:800; margin-top:14px; margin-bottom:10px; font-family:'Montserrat',sans-serif; }
-.stat-card { background:white; padding:20px; border-radius:15px; border:1px solid #e4eaf2; box-shadow:0 3px 12px rgba(0,0,0,.04); }
+.stat-card { background:white; padding:20px; border-radius:15px; border:1px solid #e4eaf2; box-shadow:0 5px 18px rgba(16,37,66,.045); }
 .stat-number { color:#1769aa; font-size:28px; font-weight:800; }
 .stat-label { color:#64748b; font-size:13px; }
-.job-card { background:white; border:1px solid #e2e8f0; border-radius:15px; padding:22px; margin-bottom:15px; }
+.job-card { background:white; border:1px solid #e2e8f0; border-radius:15px; padding:22px; margin-bottom:15px; box-shadow:0 7px 22px rgba(16,37,66,.06); transition:transform .18s ease,box-shadow .18s ease; }
+.job-card:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(16,37,66,.10); }
 .job-card h3 { color:#102542; margin-bottom:5px; }
 .job-company { color:#1769aa; font-weight:700; }
 .job-info { color:#64748b; font-size:14px; margin:4px 0; }
 .tag { display:inline-block; background:#e8f2ff; color:#1769aa; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:600; margin:5px 5px 5px 0; }
 .tag-match { display:inline-block; background:#dcfce7; color:#166534; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:700; margin:5px 5px 5px 0; }
 .tag-ver { display:inline-block; background:#fef3c7; color:#92400e; padding:5px 11px; border-radius:20px; font-size:12px; font-weight:700; margin:5px 5px 5px 0; }
-.info-box { background:white; padding:20px; border-radius:14px; border-left:5px solid #1769aa; margin-bottom:14px; border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; }
+.info-box { background:white; padding:20px; border-radius:14px; border-left:5px solid #1769aa; margin-bottom:14px; border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0; box-shadow:0 5px 18px rgba(16,37,66,.045); }
 .notif-box { background:#f8fafc; padding:12px 16px; border-radius:10px; border-left:4px solid #0f766e; margin-bottom:8px; font-size:14px; }
 .footer { text-align:center; color:#8492a6; padding:30px; font-size:13px; }
-.stButton > button { background:#1769aa; color:white; border-radius:9px; border:none; font-weight:600; padding:8px 18px; }
-.stButton > button:hover { background:#102542; color:white; }
-@media(max-width:700px) { .hero {padding:28px 20px;} .hero h1 {font-size:28px;} .institution-header {flex-wrap:wrap;} }
-
-.stApp { background: linear-gradient(180deg,#f5f8fc 0%,#eef3f9 100%); }
-.block-container { max-width: 1420px; padding-top: 1.5rem; padding-bottom: 2.5rem; }
-[data-testid="stSidebar"] { border-right: 1px solid rgba(255,255,255,.12); }
-[data-testid="stSidebar"] .stRadio label { font-weight:600; }
 .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] { border-radius:10px; }
-.stButton > button, .stFormSubmitButton > button { min-height:42px; transition:all .18s ease; box-shadow:0 3px 10px rgba(23,105,170,.12); }
-.stButton > button:hover, .stFormSubmitButton > button:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(16,37,66,.18); }
-.job-card { box-shadow:0 7px 22px rgba(16,37,66,.06); transition:transform .18s ease,box-shadow .18s ease; }
-.job-card:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(16,37,66,.10); }
-.info-box, .stat-card { box-shadow:0 5px 18px rgba(16,37,66,.045); }
-
+.stButton > button, .stFormSubmitButton > button { background:#1769aa; color:white; border-radius:9px; border:none; font-weight:600; padding:8px 18px; min-height:42px; transition:all .18s ease; box-shadow:0 3px 10px rgba(23,105,170,.12); }
+.stButton > button:hover, .stFormSubmitButton > button:hover { background:#102542; color:white; transform:translateY(-1px); box-shadow:0 6px 16px rgba(16,37,66,.18); }
+@media(max-width:700px) { .hero {padding:28px 20px;} .hero h1 {font-size:28px;} .institution-header {flex-wrap:wrap;} }
 </style>
 """, unsafe_allow_html=True)
 
@@ -327,18 +336,6 @@ def correo_institucional_valido(correo: str) -> bool:
     return bool(re.match(patron, correo.strip().lower()))
 
 
-def exigir_estudiante_institucional():
-    """Bloquea apartados estudiantiles si no hay sesión válida de estudiante."""
-    if (
-        not usuario_actual
-        or rol_actual != "Estudiante"
-        or not correo_institucional_valido(usuario_actual.get("correo", ""))
-    ):
-        st.warning("🔒 Acceso restringido: este apartado requiere una cuenta de estudiante con correo institucional.")
-        st.info("Ingresa desde **Acceso institucional** con tu cuenta @pachuca.tecnm.mx o @tecnm.mx.")
-        st.stop()
-
-
 def agregar_notificacion(destinatario: str, mensaje: str):
     st.session_state.notificaciones.insert(
         0,
@@ -421,6 +418,18 @@ def puede_calificar_estudiante(correo_empresa: str, nombre_empresa: str, correo_
 usuario_actual = obtener_usuario_actual()
 rol_actual = usuario_actual["rol"] if usuario_actual else "Visitante"
 
+
+def exigir_estudiante_institucional():
+    if (
+        not usuario_actual
+        or rol_actual != "Estudiante"
+        or not correo_institucional_valido(usuario_actual.get("correo", ""))
+    ):
+        st.warning("🔒 Acceso restringido: este apartado requiere una cuenta de estudiante con correo institucional.")
+        st.info("Ingresa desde **Acceso institucional** con tu cuenta @pachuca.tecnm.mx o @tecnm.mx.")
+        st.stop()
+
+
 # ==========================================
 # ENCABEZADO INSTITUCIONAL
 # ==========================================
@@ -428,7 +437,7 @@ rol_actual = usuario_actual["rol"] if usuario_actual else "Visitante"
 st.markdown(f"""
 <div class="gov-strip">
     <span>🇲🇽 Gobierno de México · Educación Pública Superior</span>
-    <span>Rol activo: <b>{rol_actual}</b></span>
+    <span>Rol activo: <b>{html.escape(rol_actual)}</b></span>
 </div>
 <div class="institution-header">
     <div class="brand-left">
@@ -491,13 +500,11 @@ with st.sidebar:
 
 
 def mostrar_vacante(vacante: dict, contexto: str = "general"):
-    """Renderiza una vacante como tarjeta HTML y controla la postulación."""
     verificada = empresa_verificada(vacante["empresa"])
     es_afin, motivos = calcular_compatibilidad(vacante, usuario_actual)
     prom_emp, n_emp = promedio_calificacion_empresa(vacante["empresa"])
     calif_texto = f"⭐ {prom_emp}/5 ({n_emp})" if prom_emp else "Sin calificación aún"
 
-    # Escapar los datos dinámicos evita que texto introducido por usuarios rompa el HTML.
     esc = lambda valor: html.escape(str(valor if valor is not None else ""))
     carreras_str = ", ".join(vacante.get("carreras", [])) or "Abierta"
     badge_ver = (
@@ -611,7 +618,7 @@ if pagina == "Inicio":
             st.markdown('<p class="section-title">🔔 Notificaciones recientes</p>', unsafe_allow_html=True)
             for n in notifs[:3]:
                 st.markdown(
-                    f'<div class="notif-box"><b>{n["fecha"]}</b> · {n["mensaje"]}</div>',
+                    f'<div class="notif-box"><b>{html.escape(n["fecha"])}</b> · {html.escape(n["mensaje"])}</div>',
                     unsafe_allow_html=True,
                 )
 
@@ -741,8 +748,8 @@ elif pagina == "Acceso institucional":
 
             if crear_emp:
                 c_norm = correo_emp.strip().lower()
-                if not nom_emp.strip() or not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", c_norm):
-                    st.error("Completa el nombre de la empresa y un correo corporativo válido.")
+                if not nom_emp.strip() or "@" not in c_norm:
+                    st.error("Completa el nombre de la empresa y un correo válido.")
                 elif len(pass_emp) < 8:
                     st.error("La contraseña debe tener al menos 8 caracteres.")
                 elif c_norm in st.session_state.usuarios:
@@ -775,7 +782,6 @@ elif pagina == "Acceso institucional":
 
 elif pagina == "Buscar empleo":
     st.markdown('<p class="section-title">🔎 Búsqueda de oportunidades</p>', unsafe_allow_html=True)
-    exigir_estudiante_institucional()
     st.write("Filtra por carrera, área de interés, sector, tipo y modalidad.")
 
     busqueda = st.text_input(
@@ -860,7 +866,6 @@ elif pagina == "Buscar empleo":
 
 elif pagina == "Prácticas y residencias":
     st.markdown('<p class="section-title">🎓 Prácticas y residencias profesionales</p>', unsafe_allow_html=True)
-    exigir_estudiante_institucional()
     st.write(
         "Sección enfocada en vincular tu formación académica con proyectos reales "
         "y requisitos curriculares del Instituto Tecnológico de Pachuca."
@@ -909,69 +914,64 @@ elif pagina == "Mi perfil y carreras":
     st.markdown('<p class="section-title">👤 Mi perfil académico y profesional</p>', unsafe_allow_html=True)
     exigir_estudiante_institucional()
 
-    if not usuario_actual:
-        st.info("Inicia sesión o regístrate en 'Acceso institucional' para guardar tu perfil.")
-    elif rol_actual != "Estudiante":
-        st.info(f"Tu cuenta está registrada como **{rol_actual}**. Los datos de carrera y semestre aplican a perfiles de Estudiante.")
-    else:
-        with st.form("formulario_perfil_est"):
-            nombre = st.text_input("Nombre completo", value=usuario_actual.get("nombre", ""))
-            st.text_input("Correo institucional", value=usuario_actual.get("correo", ""), disabled=True)
-            carrera = st.selectbox(
-                "Carrera",
-                CARRERAS_ITP,
-                index=CARRERAS_ITP.index(usuario_actual["carrera"])
-                if usuario_actual.get("carrera") in CARRERAS_ITP
-                else 0,
-            )
-            semestres = ["1°", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°"]
-            semestre = st.selectbox(
-                "Semestre o periodo académico",
-                semestres,
-                index=semestres.index(usuario_actual["semestre"])
-                if usuario_actual.get("semestre") in semestres
-                else 0,
-            )
-            area_interes = st.selectbox(
-                "Área de interés",
-                AREAS_INTERES,
-                index=AREAS_INTERES.index(usuario_actual["area_interes"])
-                if usuario_actual.get("area_interes") in AREAS_INTERES
-                else 0,
-            )
-            habilidades = st.text_area(
-                "Habilidades técnicas y blandas",
-                value=usuario_actual.get("habilidades", ""),
-                placeholder="Ej. Python, SQL, SolidWorks, Lean Manufacturing, trabajo en equipo...",
-            )
-            disponibilidad = st.selectbox(
-                "Disponibilidad de horario",
-                ["Matutino", "Vespertino", "Nocturno", "Flexible", "Fines de semana"],
-            )
-            telefono = st.text_input("Teléfono de contacto (opcional)", value=usuario_actual.get("telefono", ""))
-            guardar = st.form_submit_button("Guardar perfil")
+    with st.form("formulario_perfil_est"):
+        nombre = st.text_input("Nombre completo", value=usuario_actual.get("nombre", ""))
+        st.text_input("Correo institucional", value=usuario_actual.get("correo", ""), disabled=True)
+        carrera = st.selectbox(
+            "Carrera",
+            CARRERAS_ITP,
+            index=CARRERAS_ITP.index(usuario_actual["carrera"])
+            if usuario_actual.get("carrera") in CARRERAS_ITP
+            else 0,
+        )
+        semestres = ["1°", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°"]
+        semestre = st.selectbox(
+            "Semestre o periodo académico",
+            semestres,
+            index=semestres.index(usuario_actual["semestre"])
+            if usuario_actual.get("semestre") in semestres
+            else 0,
+        )
+        area_interes = st.selectbox(
+            "Área de interés",
+            AREAS_INTERES,
+            index=AREAS_INTERES.index(usuario_actual["area_interes"])
+            if usuario_actual.get("area_interes") in AREAS_INTERES
+            else 0,
+        )
+        habilidades = st.text_area(
+            "Habilidades técnicas y blandas",
+            value=usuario_actual.get("habilidades", ""),
+            placeholder="Ej. Python, SQL, SolidWorks, Lean Manufacturing, trabajo en equipo...",
+        )
+        disponibilidad = st.selectbox(
+            "Disponibilidad de horario",
+            ["Matutino", "Vespertino", "Nocturno", "Flexible", "Fines de semana"],
+        )
+        telefono = st.text_input("Teléfono de contacto (opcional)", value=usuario_actual.get("telefono", ""))
+        guardar = st.form_submit_button("Guardar perfil")
 
-            if guardar:
-                if nombre.strip():
-                    usuario_actual.update(
-                        {
-                            "nombre": nombre.strip(),
-                            "carrera": carrera,
-                            "semestre": semestre,
-                            "area_interes": area_interes,
-                            "habilidades": habilidades.strip(),
-                            "disponibilidad": disponibilidad,
-                            "telefono": telefono.strip(),
-                        }
-                    )
-                    st.success("Perfil actualizado correctamente.")
-                else:
-                    st.error("El nombre completo no puede estar vacío.")
+        if guardar:
+            if nombre.strip():
+                usuario_actual.update(
+                    {
+                        "nombre": nombre.strip(),
+                        "carrera": carrera,
+                        "semestre": semestre,
+                        "area_interes": area_interes,
+                        "habilidades": habilidades.strip(),
+                        "disponibilidad": disponibilidad,
+                        "telefono": telefono.strip(),
+                    }
+                )
+                st.success("Perfil actualizado correctamente.")
+            else:
+                st.error("El nombre completo no puede estar vacío.")
 
-        st.markdown("---")
-        st.markdown("### Resumen del perfil actual")
-        for k in ["nombre", "correo", "carrera", "semestre", "area_interes", "disponibilidad", "habilidades", "telefono"]:
-            st.write(f"**{k.replace('_', ' ').capitalize()}:** {usuario_actual.get(k, '—')}")
+    st.markdown("---")
+    st.markdown("### Resumen del perfil actual")
+    for k in ["nombre", "correo", "carrera", "semestre", "area_interes", "disponibilidad", "habilidades", "telefono"]:
+        st.write(f"**{k.replace('_', ' ').capitalize()}:** {usuario_actual.get(k, '—')}")
 
 
 # ==========================================
@@ -982,32 +982,27 @@ elif pagina == "Mi currículum":
     st.markdown('<p class="section-title">📄 Mi currículum vitae (PDF)</p>', unsafe_allow_html=True)
     exigir_estudiante_institucional()
 
-    if not usuario_actual:
-        st.info("Inicia sesión con tu cuenta estudiantil para administrar tu currículum.")
-    elif rol_actual != "Estudiante":
-        st.info("Esta sección está destinada a estudiantes.")
+    st.write("Sube tu CV en formato PDF para mantenerlo asociado a tu perfil durante la sesión.")
+    archivo = st.file_uploader("Selecciona tu CV en PDF", type=["pdf"])
+
+    if archivo is not None:
+        if archivo.size > 5 * 1024 * 1024:
+            st.error("El archivo excede el límite de 5 MB.")
+        elif st.button("Guardar currículum"):
+            os.makedirs("curriculums", exist_ok=True)
+            safe_user = re.sub(r"[^a-zA-Z0-9_-]", "_", usuario_actual["correo"])
+            nombre_archivo = f"CV_{safe_user}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            ruta = os.path.join("curriculums", nombre_archivo)
+            with open(ruta, "wb") as f:
+                f.write(archivo.getbuffer())
+            st.session_state.curriculums_por_usuario[usuario_actual["correo"]] = nombre_archivo
+            st.success("Currículum guardado correctamente.")
+
+    cv_actual = st.session_state.curriculums_por_usuario.get(usuario_actual["correo"])
+    if cv_actual:
+        st.info(f"CV activo en esta sesión: **{cv_actual}**")
     else:
-        st.write("Sube tu CV en formato PDF para mantenerlo asociado a tu perfil durante la sesión.")
-        archivo = st.file_uploader("Selecciona tu CV en PDF", type=["pdf"])
-
-        if archivo is not None:
-            if archivo.size > 5 * 1024 * 1024:
-                st.error("El archivo excede el límite de 5 MB.")
-            elif st.button("Guardar currículum"):
-                os.makedirs("curriculums", exist_ok=True)
-                safe_user = re.sub(r"[^a-zA-Z0-9_-]", "_", usuario_actual["correo"])
-                nombre_archivo = f"CV_{safe_user}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                ruta = os.path.join("curriculums", nombre_archivo)
-                with open(ruta, "wb") as f:
-                    f.write(archivo.getbuffer())
-                st.session_state.curriculums_por_usuario[usuario_actual["correo"]] = nombre_archivo
-                st.success("Currículum guardado correctamente.")
-
-        cv_actual = st.session_state.curriculums_por_usuario.get(usuario_actual["correo"])
-        if cv_actual:
-            st.info(f"CV activo en esta sesión: **{cv_actual}**")
-        else:
-            st.caption("Aún no has guardado un CV en esta sesión.")
+        st.caption("Aún no has guardado un CV en esta sesión.")
 
 
 # ==========================================
@@ -1016,11 +1011,6 @@ elif pagina == "Mi currículum":
 
 elif pagina == "Mis postulaciones":
     st.markdown('<p class="section-title">📋 Seguimiento de postulaciones</p>', unsafe_allow_html=True)
-    if rol_actual == "Estudiante":
-        exigir_estudiante_institucional()
-    elif not usuario_actual:
-        st.warning("Inicia sesión para consultar postulaciones.")
-        st.stop()
 
     if not usuario_actual:
         st.info("Inicia sesión para consultar y dar seguimiento a postulaciones.")
@@ -1048,9 +1038,9 @@ elif pagina == "Mis postulaciones":
                 puesto_nombre = vac.get("puesto", f"Vacante #{p['vacante_id']}")
                 st.markdown(f"""
                 <div class="info-box">
-                    <h3>{puesto_nombre} · <span class="tag">{p['estado']}</span></h3>
-                    <b>Empresa:</b> {p['empresa']} | <b>Estudiante:</b> {p['estudiante_nombre']} ({p['estudiante_correo']})<br>
-                    <small>Fecha de registro: {p['fecha']} · Nota: {p.get('nota', '')}</small>
+                    <h3>{html.escape(puesto_nombre)} · <span class="tag">{html.escape(p['estado'])}</span></h3>
+                    <b>Empresa:</b> {html.escape(p['empresa'])} | <b>Estudiante:</b> {html.escape(p['estudiante_nombre'])} ({html.escape(p['estudiante_correo'])})<br>
+                    <small>Fecha de registro: {html.escape(p['fecha'])} · Nota: {html.escape(p.get('nota', ''))}</small>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1090,8 +1080,6 @@ elif pagina == "Mis postulaciones":
 
 elif pagina == "Calificaciones mutuas":
     st.markdown('<p class="section-title">⭐ Calificaciones mutuas</p>', unsafe_allow_html=True)
-    if rol_actual == "Estudiante":
-        exigir_estudiante_institucional()
     st.write(
         "Solo es posible calificar cuando existe una postulación o experiencia registrada "
         "entre el estudiante y la empresa."
@@ -1203,10 +1191,10 @@ elif pagina == "Calificaciones mutuas":
     st.markdown("### Historial de evaluaciones recientes")
     for c in reversed(st.session_state.calificaciones[-8:]):
         st.markdown(
-            f'<div class="info-box"><b>{c["objetivo_tipo"]}:</b> {c["objetivo_id"]} · '
+            f'<div class="info-box"><b>{html.escape(c["objetivo_tipo"])}:</b> {html.escape(c["objetivo_id"])} · '
             f'<b>{"⭐" * c["puntuacion"]} ({c["puntuacion"]}/5)</b><br>'
-            f'<small>Por {c["autor_rol"]} ({c["autor_correo"]}) · {c["fecha"]}</small><br>'
-            f'{c.get("comentario", "")}</div>',
+            f'<small>Por {html.escape(c["autor_rol"])} ({html.escape(c["autor_correo"])}) · {html.escape(c["fecha"])}</small><br>'
+            f'{html.escape(c.get("comentario", ""))}</div>',
             unsafe_allow_html=True,
         )
 
@@ -1363,7 +1351,7 @@ elif pagina == "Panel universitario":
             df_post = pd.DataFrame(st.session_state.postulaciones)
             resumen_estados = df_post["estado"].value_counts().reset_index()
             resumen_estados.columns = ["Estado", "Cantidad"]
-            st.dataframe(resumen_estados, use_container_width=True, hide_index=True)
+            st.dataframe(resumen_estados, width="stretch", hide_index=True)
             st.bar_chart(resumen_estados.set_index("Estado"))
         else:
             st.info("Sin datos de postulaciones aún.")
@@ -1383,7 +1371,7 @@ elif pagina == "Panel universitario":
                 for u in st.session_state.usuarios.values()
             ]
         )
-        st.dataframe(df_users, use_container_width=True, hide_index=True)
+        st.dataframe(df_users, width="stretch", hide_index=True)
 
 
 # ==========================================
@@ -1396,11 +1384,11 @@ elif pagina == "Seguridad y acerca":
     st.markdown("""
     <div class="info-box">
         <h3>🔐 Controles implementados en el prototipo</h3>
-        • <b>Validación de correo institucional:</b> restringe el registro de estudiantes a dominios institucionales (@pachuca.tecnm.mx / @tecnm.mx).<br>
+        • <b>Validación de correo institucional:</b> restringe el registro y acceso de estudiantes a dominios institucionales (@pachuca.tecnm.mx / @tecnm.mx).<br>
         • <b>Permisos por rol:</b> separa acciones de Visitante, Estudiante, Empresa y Administrador.<br>
         • <b>Verificación previa de empresas:</b> impide que empresas no verificadas publiquen ofertas activas.<br>
         • <b>Evaluaciones condicionadas:</b> exige postulación o experiencia registrada para habilitar calificaciones mutuas.<br>
-        • <b>Control de publicaciones y cuentas:</b> permite al administrador activar/ocultar vacantes o suspender cuentas.
+        • <b>Escape HTML y control de publicaciones:</b> escapa entradas dinámicas en tarjetas HTML y permite activar/ocultar vacantes o suspender cuentas.
     </div>
     """, unsafe_allow_html=True)
 
